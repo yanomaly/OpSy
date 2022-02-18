@@ -31,5 +31,6 @@ int main() {
 		CloseHandle(pi.hThread);
 		CloseHandle(pi.hProcess);
 	};
+	cout << "Test commit";
 	return 0;
 }

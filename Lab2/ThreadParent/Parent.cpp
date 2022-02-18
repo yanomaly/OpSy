@@ -26,7 +26,6 @@ int main() {
 	for (int i = 0; i < size; i++)
 		commandLine += array[i];
 	if (CreateProcess(NULL, child, NULL, NULL, NULL, NULL, NULL, NULL, &sti, &pi)) {
-		
 		WaitForSingleObject(pi.hProcess,INFINITE);
 		CloseHandle(pi.hThread);
 		CloseHandle(pi.hProcess);

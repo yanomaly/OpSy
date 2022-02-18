@@ -6,6 +6,11 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThreadParent", "ThreadParent\ThreadParent.vcxproj", "{2586F75F-3A22-4CCB-97BE-C33BAE27CB17}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThreadChild", "ThreadChild\ThreadChild.vcxproj", "{E9CE7E25-EA63-4453-84BC-70FF3366E527}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2586F75F-3A22-4CCB-97BE-C33BAE27CB17} = {2586F75F-3A22-4CCB-97BE-C33BAE27CB17}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Fibonachi", "Fibonachi\Fibonachi.vcxproj", "{D7AA520E-59D6-4DB6-A152-B289B6874002}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +36,14 @@ Global
 		{E9CE7E25-EA63-4453-84BC-70FF3366E527}.Release|x64.Build.0 = Release|x64
 		{E9CE7E25-EA63-4453-84BC-70FF3366E527}.Release|x86.ActiveCfg = Release|Win32
 		{E9CE7E25-EA63-4453-84BC-70FF3366E527}.Release|x86.Build.0 = Release|Win32
+		{D7AA520E-59D6-4DB6-A152-B289B6874002}.Debug|x64.ActiveCfg = Debug|x64
+		{D7AA520E-59D6-4DB6-A152-B289B6874002}.Debug|x64.Build.0 = Debug|x64
+		{D7AA520E-59D6-4DB6-A152-B289B6874002}.Debug|x86.ActiveCfg = Debug|Win32
+		{D7AA520E-59D6-4DB6-A152-B289B6874002}.Debug|x86.Build.0 = Debug|Win32
+		{D7AA520E-59D6-4DB6-A152-B289B6874002}.Release|x64.ActiveCfg = Release|x64
+		{D7AA520E-59D6-4DB6-A152-B289B6874002}.Release|x64.Build.0 = Release|x64
+		{D7AA520E-59D6-4DB6-A152-B289B6874002}.Release|x86.ActiveCfg = Release|Win32
+		{D7AA520E-59D6-4DB6-A152-B289B6874002}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

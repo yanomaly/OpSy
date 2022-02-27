@@ -5,7 +5,10 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-	int size, elem;
+	int size, elem, Y;
+
+	cout << "Input (in px) Y: ";
+	cin >> Y;
 
 	wstring childName(L"C:/Users/famil/source/repos/OpSy/Lab2/x64/Debug/ThreadChild.exe");
 	LPWSTR child = &childName[0];
@@ -21,6 +24,10 @@ int main(int argc, char* argv[]) {
 	sti.cb = sizeof(STARTUPINFO);
 	ZeroMemory(&stiF, sizeof(STARTUPINFO));
 	stiF.cb = sizeof(STARTUPINFO);
+	sti.dwFlags = STARTF_USEPOSITION;
+	sti.dwY = Y;
+	stiF.dwFlags = STARTF_USEPOSITION;
+	stiF.dwY = Y + 100;
 
 	cout << "Input size of array: " << endl;
 	cin >> size;
@@ -38,10 +45,10 @@ int main(int argc, char* argv[]) {
 		commandLine += " " + to_string(array[i]);
 	wstring cm(commandLine.begin(), commandLine.end());
 	LPWSTR comLine = &cm[0];
-	CreateProcess(fibonachi, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &stiF, &piF);
-	
-	CreateProcess(child, comLine, NULL, NULL, NULL, NULL, NULL, NULL, &sti, &pi);
-		WaitForSingleObject(pi.hProcess,INFINITE);
+	CreateProcess(fibonachi, NULL, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &stiF, &piF);
+	SetPriorityClass(piF.hProcess, HIGH_PRIORITY_CLASS);
+	CreateProcess(child, comLine, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &sti, &pi);
+		WaitForSingleObject(pi.hProcess, INFINITE);
 		CloseHandle(pi.hThread);
 		TerminateProcess(pi.hProcess, 0);
 		CloseHandle(piF.hThread);

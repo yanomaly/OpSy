@@ -12,6 +12,7 @@ int main() {
 		n2 = n1 + n2;
 		n1 = temp;
 		cout << n1 << " f" << endl;
+		Sleep(200);
 	}
 	return 0;
 }

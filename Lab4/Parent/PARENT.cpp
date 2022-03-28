@@ -4,7 +4,7 @@
 #include <ctime>
 using namespace std;
 
-int main(int a = 0) {
+int main() {
 	int msg, msgs;
 	cout << "Input number of messages: " << endl;
 	/*cin >> msgs;
@@ -16,5 +16,7 @@ int main(int a = 0) {
 		cout << "Input \"A\" or \"B\": ";
 		cin >> ms[i];
 	}*/
+	int a;
+	cin >> a;
 	SetEvent(Finish);
 }

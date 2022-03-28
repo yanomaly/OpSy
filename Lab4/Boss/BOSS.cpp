@@ -16,24 +16,23 @@ int main() {
 	if (child > 4)
 		cout << "Wrong number";
 	else {
-		string p = "PARENT.exe";
+		string p = "Parent.exe";
 		wstring Par(p.begin(), p.end());
 		LPWSTR Pr = &Par[0];
-		string c = "СHILD.exe";
+		string c = "Child.exe";
 		wstring Chl(c.begin(), c.end());
 		LPWSTR Ch = &Chl[0];
 		STARTUPINFO* st = new STARTUPINFO[child + 1];
 		PROCESS_INFORMATION* pi = new PROCESS_INFORMATION[child + 1];
 		ZeroMemory(&st[0], sizeof(STARTUPINFO));
 		st[0].cb = sizeof(STARTUPINFO);
-		CreateProcess(NULL, Pr, NULL, NULL, FALSE, NULL, NULL, NULL, &st[0], &pi[0]);
+		CreateProcess(NULL, Pr, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &st[0], &pi[0]);
 		for (int i = 1; i <= child; i++) {
-			PROCESS_INFORMATION piC;
 			ZeroMemory(&st[i], sizeof(STARTUPINFO));
 			st[i].cb = sizeof(STARTUPINFO);
-			CreateProcess(NULL, Ch, NULL, NULL, FALSE, NULL, NULL, NULL, &st[i], &pi[i]);
+			CreateProcess(NULL, Ch, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &st[i], &pi[i]);
 		}
-		WaitForMultipleObjects(1, &Finish, FALSE, INFINITY);
+		WaitForMultipleObjects(child + 1, &Finish, TRUE, INFINITE);
 		cout << "BOOOOOOOOOOOOOOOOOOOOOOSSSSSSSSSSSSSSSSSSSSSSSSSSS";
 	}
 }

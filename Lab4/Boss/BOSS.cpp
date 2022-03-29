@@ -8,11 +8,11 @@ int main() {
 	int child, msgs;
 	cout << "Input number (<= 4) of child proccesses: ";
 	cin >> child;
-	HANDLE Finish = CreateEvent(NULL, FALSE, FALSE, NULL),
-		A = CreateEvent(NULL, FALSE, FALSE, NULL),
-		B = CreateEvent(NULL, FALSE, FALSE, NULL),
-		C = CreateEvent(NULL, FALSE, FALSE, NULL),
-		D = CreateEvent(NULL, FALSE, FALSE, NULL);
+	HANDLE Finish = CreateEvent(NULL, FALSE, FALSE, (LPWSTR)"Finish"),
+		A = CreateEvent(NULL, FALSE, FALSE, (LPWSTR)"A"),
+		B = CreateEvent(NULL, FALSE, FALSE, (LPWSTR)"B"),
+		C = CreateEvent(NULL, FALSE, FALSE, (LPWSTR)"C"),
+		D = CreateEvent(NULL, FALSE, FALSE, (LPWSTR)"D");
 	if (child > 4)
 		cout << "Wrong number";
 	else {
@@ -32,7 +32,7 @@ int main() {
 			st[i].cb = sizeof(STARTUPINFO);
 			CreateProcess(NULL, Ch, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &st[i], &pi[i]);
 		}
-		WaitForMultipleObjects(child + 1, &Finish, TRUE, INFINITE);
+		WaitForSingleObject(Finish, INFINITE);
 		cout << "BOOOOOOOOOOOOOOOOOOOOOOSSSSSSSSSSSSSSSSSSSSSSSSSSS";
 	}
 }

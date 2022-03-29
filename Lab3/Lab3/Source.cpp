@@ -29,13 +29,13 @@ public:
 
 DWORD WINAPI work(LPVOID temp)
 {
+	EnterCriticalSection(&cs);
 	arrayS* tmp = (arrayS*)temp;
 	int* array = tmp->getArr();
 	int size = tmp->getSize();
 	int* newArray = new int[size];
 	int* tempArray = new int[size];
 	int sleep, j = 0, k = 0;
-	EnterCriticalSection(&cs);
 	cout << "Input sleep time: ";
 	cin >> sleep;
 	cout << "Worker enter CS" << endl;
@@ -61,12 +61,13 @@ DWORD WINAPI work(LPVOID temp)
 }
 
 DWORD WINAPI count(LPVOID temp) {
-	EnterCriticalSection(&cs);
-	cout << "Count enter CS" << endl;
+	
 	arrayS* tmp = (arrayS*)temp;
 	int count = 0;
 	int* array = tmp->getArr();
 	int size = tmp->getSize();
+	EnterCriticalSection(&cs);
+	cout << "Count enter CS" << endl;
 	for (int i = 0; i < size; i++)
 		if (array[i] == elem)
 			count++;
@@ -102,7 +103,7 @@ int main()
 	cin >> tmp;
 	elem = tmp;
 	ResumeThread(worker);
-	Sleep(25);
+	
 	ResumeThread(counter);
 	WaitForSingleObject(countEvent, INFINITE);
 	cout << res << " elements equals " << elem << " in array" << endl;

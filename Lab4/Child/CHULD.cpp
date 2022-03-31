@@ -4,14 +4,12 @@
 #include <ctime>
 using namespace std;
 
-int main() {
-	cout << "CHILD Input \"A\" or \"B\": " << endl;
-	HANDLE Finish = OpenEvent(SYNCHRONIZE, FALSE, (LPWSTR)"Finish"),
-		A = OpenEvent(SYNCHRONIZE, FALSE, (LPWSTR)"A"),
-		B = OpenEvent(SYNCHRONIZE, FALSE, (LPWSTR)"B"),
+int main(int argc, char* argv[]) {
+	char* flag = argv[0];
+	HANDLE Finish = OpenEvent(SYNCHRONIZE, FALSE, (LPWSTR)flag),
 		C = OpenEvent(SYNCHRONIZE, FALSE, (LPWSTR)"C"),
 		D = OpenEvent(SYNCHRONIZE, FALSE, (LPWSTR)"D");
-	int a;
-	cin >> a;
+	cout << "CHILD" << flag;
+	Sleep(1000);
 	SetEvent(Finish);
 }

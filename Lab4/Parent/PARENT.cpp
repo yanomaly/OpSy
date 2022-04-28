@@ -5,8 +5,9 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-	int msg, msgs = atoi(argv[0]);
-	string zero = "0";
+	int msg, msgs = atoi(argv[1]);
+	char* flag = argv[0];
+	string zero = flag;
 	wstring z(zero.begin(), zero.end());
 	LPWSTR zer = &z[0];
 	string a = "A";

@@ -7,9 +7,11 @@
 using namespace std;
 
 int main() {
-	int child, msgs;
+	int child, parent, msgs;
 	cout << "Input number (<= 4) of child proccesses: ";
 	cin >> child;
+	cout << "Input number of parent proccesses: ";
+	cin >> parent;
 	string a = "A";
 	wstring aa(a.begin(), a.end());
 	LPWSTR aaa = &aa[0];
@@ -31,37 +33,46 @@ int main() {
 		C = CreateEvent(NULL, FALSE, FALSE, ccc),
 		D = CreateEvent(NULL, FALSE, FALSE, ddd),
 		MESSAGES = CreateEvent(NULL, FALSE, FALSE, mss);
-	HANDLE sem = CreateSemaphore(NULL, 5, 5, (LPWSTR)"semaphore");
 	if (child > 4)
 		cout << "Wrong number";
 	else {
 
-		wstring childName(L"C:/Users/famil/source/repos/OpSy/Lab4/x64/Debug/Child.exe");
+		wstring childName(L"D:/Users/famil/source/repos/OpSy/Lab4/x64/Debug/Child.exe");
 		LPWSTR chld = &childName[0];
 
-		wstring parentName(L"C:/Users/famil/source/repos/OpSy/Lab4/x64/Debug/Parent.exe");
+		wstring parentName(L"D:/Users/famil/source/repos/OpSy/Lab4/x64/Debug/Parent.exe");
 		LPWSTR prnt = &parentName[0];
 
 		string commandLine = "0";
 		wstring cm(commandLine.begin(), commandLine.end());
 		LPWSTR comLine = &cm[0];
 
-		HANDLE* events = new HANDLE[child + 1];
+		HANDLE* events = new HANDLE[child + parent];
 		string msgs;
 		cout << "Input number of messages: ";
 		cin >> msgs;
+		HANDLE semaphore = CreateSemaphore(NULL, 5, 5, (LPWSTR)"sem");
 		wstring s(msgs.begin(), msgs.end());
 		LPWSTR str = &s[0];
 		string zero = "0";
 		wstring z(zero.begin(), zero.end());
 		LPWSTR zer = &z[0];
 		events[0] = CreateEvent(NULL, FALSE, FALSE, zer);
-		STARTUPINFO* st = new STARTUPINFO[child + 1];
-		PROCESS_INFORMATION* pi = new PROCESS_INFORMATION[child + 1];
-		ZeroMemory(&st[0], sizeof(STARTUPINFO));
-		st[0].cb = sizeof(STARTUPINFO);
-		CreateProcess(prnt, str, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &st[0], &pi[0]);
-		for (int i = 1; i <= child; i++) {
+		STARTUPINFO* st = new STARTUPINFO[child + parent];
+		PROCESS_INFORMATION* pi = new PROCESS_INFORMATION[child + parent];
+		for (int i = 0; i < parent; i++) {
+			commandLine = to_string(i);
+			wstring cm(commandLine.begin(), commandLine.end());
+			comLine = &cm[0];
+			events[i] = CreateEvent(NULL, FALSE, FALSE, comLine);
+			commandLine += " " + msgs;
+			wstring cmm(commandLine.begin(), commandLine.end());
+			comLine = &cmm[0];
+			ZeroMemory(&st[i], sizeof(STARTUPINFO));
+			st[i].cb = sizeof(STARTUPINFO);
+			CreateProcess(prnt, comLine, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &st[i], &pi[i]);
+		}
+		for (int i = parent; i < child + parent; i++) {
 			commandLine = to_string(i);
 			wstring cm(commandLine.begin(), commandLine.end());
 			comLine = &cm[0];
@@ -73,9 +84,10 @@ int main() {
 			st[i].cb = sizeof(STARTUPINFO);
 			CreateProcess(chld, comLine, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &st[i], &pi[i]);
 		}
-		int count = atoi(msgs.c_str());
+		int count = atoi(msgs.c_str()) * parent;
 		for (int i = 0; i < count; i++) {
 			WaitForSingleObject(sem, INFINITE);
+			WaitForSingleObject(semaphore, INFINITE);
 			while (true) {
 				if (0 == WaitForSingleObject(A, 100)) {
 					cout << "BOSS A -> C" << endl;
@@ -90,6 +102,7 @@ int main() {
 			}
 		}
 		SetEvent(MESSAGES);
-		WaitForMultipleObjects(1 + child, events, TRUE, INFINITE);
+		WaitForMultipleObjects(parent + child, events, TRUE, INFINITE);
+	
 	}
 }

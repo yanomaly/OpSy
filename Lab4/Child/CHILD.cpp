@@ -10,6 +10,7 @@ int main(int argc, char* argv[]) {
 	Sleep(100);
 	int msg;
 	HANDLE sem = OpenSemaphore(SEMAPHORE_ALL_ACCESS, TRUE, (LPCWSTR)"semaphore");
+	HANDLE semaphore = OpenSemaphore(SEMAPHORE_ALL_ACCESS, TRUE, (LPCWSTR)"såm");
 	char* flag = argv[0];
 	int ms = atoi(argv[1]);
 	string zero = flag;
@@ -41,6 +42,6 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	SetEvent(Finish);
-	ReleaseSemaphore(sem, 1, NULL);
+	ReleaseSemaphore(semaphore, 1, NULL);
 	cin >> msg;
 }

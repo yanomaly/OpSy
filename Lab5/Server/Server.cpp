@@ -36,7 +36,7 @@ int main()
 	CreatePipe(&hReadPipe, &hWritePipe, &sa, 0); 
 	ZeroMemory(&si, sizeof(STARTUPINFO));
 	si.cb = sizeof(STARTUPINFO);
-	wstring smallName(L"C:/Users/famil/source/repos/OpSy/Lab5/x64/Debug/Small.exe");
+	wstring smallName(L"D:/Users/famil/source/repos/OpSy/Lab5/x64/Debug/Small.exe");
 	LPWSTR smll = &smallName[0];
 	string lpszComLine = to_string((int)hWritePipe) + " " + to_string((int)hReadPipe);
 	wstring lc(lpszComLine.begin(), lpszComLine.end());

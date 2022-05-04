@@ -2,13 +2,12 @@
 #include <iostream>
 using namespace std;
 
-void main()
+int main()
 {
 	HANDLE hNamedPipeR, hNamedPipeW;
-	char pipeNameRead[] = "\\\\DESKTOP-H2T0TBN\\pipeR\\demo_pipe1";
-	char pipeNameWrite[] = "\\\\DESKTOP-H2T0TBN\\pipeW\\demo_pipe2";
 
-	hNamedPipeR = CreateFile((LPCWSTR)pipeNameWrite, GENERIC_WRITE, FILE_SHARE_READ, (LPSECURITY_ATTRIBUTES)NULL, OPEN_EXISTING, 0, (HANDLE)NULL);
+	hNamedPipeR = CreateFile("\\\\.\\pipe\\demo_pipe2", GENERIC_READ, FILE_SHARE_READ, (LPSECURITY_ATTRIBUTES)NULL, OPEN_EXISTING, 0, (HANDLE)NULL);
+	cout << hNamedPipeR << endl;
 	int size, elem, new_size = 0;
 	DWORD dwBytesRead1;
 	ReadFile(hNamedPipeR, &size, sizeof(size), &dwBytesRead1, NULL);
@@ -28,7 +27,8 @@ void main()
 			new_size++;
 		}
 	}
-	hNamedPipeW = CreateFile((LPCWSTR)pipeNameRead, GENERIC_WRITE, FILE_SHARE_READ, (LPSECURITY_ATTRIBUTES)NULL, OPEN_EXISTING, 0, (HANDLE)NULL);
+	Sleep(500);
+	hNamedPipeW = CreateFile("\\\\.\\pipe\\demo_pipe1", GENERIC_WRITE, FILE_SHARE_WRITE, (LPSECURITY_ATTRIBUTES)NULL, OPEN_EXISTING, 0, (HANDLE)NULL);
 
 	DWORD dwBytesWritten;
 	WriteFile(hNamedPipeW, &new_size, sizeof(new_size), &dwBytesWritten, NULL);
@@ -39,4 +39,5 @@ void main()
 		WriteFile(hNamedPipeW, &array[i], sizeof(array[i]), &dwBytesWritten1, NULL);
 		cout << "Writing into pipe... " << array[i] << endl;
 	}
+	return 0;
 }

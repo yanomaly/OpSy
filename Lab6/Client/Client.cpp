@@ -39,5 +39,6 @@ int main()
 		WriteFile(hNamedPipeW, &array[i], sizeof(array[i]), &dwBytesWritten1, NULL);
 		cout << "Writing into pipe... " << array[i] << endl;
 	}
+	cin >> new_size;
 	return 0;
 }

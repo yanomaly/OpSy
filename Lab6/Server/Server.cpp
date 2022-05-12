@@ -20,10 +20,9 @@ int main()
 	hNamedPipeWrite = CreateNamedPipe("\\\\.\\pipe\\demo_pipe2", PIPE_ACCESS_OUTBOUND, PIPE_TYPE_MESSAGE | PIPE_WAIT, 1, 0, 0, INFINITE, (LPSECURITY_ATTRIBUTES)NULL);
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
-	char a[] = "D:/Users/famil/source/repos/OpSy/Lab6/x64/Debug/Client.exe";
 	ZeroMemory(&si, sizeof(STARTUPINFO));
 	si.cb = sizeof(STARTUPINFO);
-	CreateProcess(a, NULL, NULL, NULL, TRUE, CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi);
+	CreateProcess("D:/Users/famil/source/repos/OpSy/Lab6/x64/Debug/Client.exe", NULL, NULL, NULL, TRUE, CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi);
 	cout << "The server is waiting for connection with a client." << endl;
 	if(!ConnectNamedPipe(hNamedPipeWrite, (LPOVERLAPPED)NULL))
 		cerr << "The connection failed." << endl;
@@ -50,7 +49,7 @@ int main()
 	ReadFile(hNamedPipeRead, &resultSize, sizeof(resultSize), &dwBytesRead1, NULL);
 	cout << "Reading from pipe... " << resultSize << endl;
 	string result = "";
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < resultSize; i++)
 	{
 		int nData;
 		DWORD dwBytesRead;

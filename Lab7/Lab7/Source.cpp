@@ -1,61 +1,72 @@
 #include <windows.h>
-#include <time.h>
+#include <ctime>
 #include <stdlib.h>
 #include <iostream>
 using namespace std;
 
-volatile unsigned int* queue;
-volatile MonitorQueue monitor;
+unsigned int* queue;
+HANDLE SemaphoreAdd;
+HANDLE SemaphoreRemove;
+CRITICAL_SECTION cs;
 
-class MonitorQueue{
+class MonitorQueue {
 private:
 	int maxSize, currentSize;
 public:
+	MonitorQueue(){
+		maxSize = 0;
+		currentSize = 0;
+	}
+
 	MonitorQueue(int nSize) {
 		queue = new unsigned int[nSize];
 		maxSize = nSize;
 		currentSize = 0;
-	}; 
-
-	~MonitorQueue() {
-		delete queue;
 	};
 
 	void AddTail(unsigned int& nElement) {
-		if (currentSize < maxSize) {
-			queue[currentSize] = nElement;
-			currentSize++;
-		}
-		else {
-			cout << 0; //тут
-		}
+		WaitForSingleObject(SemaphoreAdd, INFINITE);
+		queue[currentSize] = nElement;
+		currentSize++;
+		ReleaseSemaphore(SemaphoreRemove, 1, NULL);
 	};
-	
+
 	unsigned int RemoveHead() {
-		if (currentSize > 0) {
-			currentSize--;
-			return queue[currentSize];
-		}
-		else {
-			return 0; //тут
-		}
-	}; 
+		WaitForSingleObject(SemaphoreRemove, INFINITE);
+		unsigned int elem = queue[0];
+		for (int i = 0; i < currentSize - 1; i++)
+			queue[i] = queue[i + 1];
+		currentSize--;
+		ReleaseSemaphore(SemaphoreAdd, 1, NULL);
+		return elem;
+	};
 };
+
+MonitorQueue monitor;
 
 DWORD WINAPI consume(LPVOID count) {
 	int cnt = (int)count;
-	for (int i = 0; i < cnt; i++) 
-		cout << "Consumed object " << monitor->RemoveHead() << endl;
+	for (int i = 0; i < cnt; i++) {
+		unsigned int obj = monitor.RemoveHead();
+		EnterCriticalSection(&cs);
+		cout << "Consumed object " << obj << endl;
+		LeaveCriticalSection(&cs);
+		Sleep(500);
+	}
+	return 0;
 }
 
 DWORD WINAPI produce(LPVOID count) {
-	srand(time(NULL));
 	int cnt = (int)count;
 	for (int i = 0; i < cnt; i++) { 
-		unsigned int obj = (unsigned int)rand();
-		monitor->AddTail(obj);
-		cout << "Produced object: " << obj << endl;
+		unsigned int obj = (unsigned int)rand() % 100;
+		EnterCriticalSection(&cs);
+		cout << "Produced object " << obj << endl;
+		LeaveCriticalSection(&cs);
+		monitor.AddTail(obj);
+		Sleep(500);
 	}
+	return 0;
 }
 
 void main() {
@@ -73,22 +84,27 @@ void main() {
 	produced = new int[producers];
 	cout << "Input size of queue: " << endl;
 	cin >> size;
-	monitor = new MonitorQueue(size);
+	monitor = MonitorQueue(size);
+	SemaphoreAdd = CreateSemaphore(NULL, size, size, NULL);
+	SemaphoreRemove = CreateSemaphore(NULL, 0, size, NULL);
+	InitializeCriticalSection(&cs);
 	handles = new HANDLE[consumers + producers];
 	consumersID = new DWORD[consumers];
 	producersID = new DWORD[producers];
-	int pos;
+	int pos = 0;
 	for (int i = 0; i < consumers; i++) {
 		cout << "Input number of consumed objects " << endl;
 		cin >> consumed[i];
-		handles[i] = CreateThread(NULL, 0, consume, (int*)consumed[i], 0, &consumersID[i]);
-		pos = i;
 	}
 	for (int i = 0; i < producers; i++) {
 		cout << "Input number of produced objects " << endl;
 		cin >> produced[i];
-		handles[pos] = CreateThread(NULL, 0, produce, (int*)produced[i], 0, &producersID[i]);
-		pos++;
 	}
+	srand(time(0));
+	for (int i = 0; i < producers; i++, pos++)
+		handles[i] = CreateThread(NULL, 0, produce, (int*)produced[i], 0, &producersID[i]);
+	for (int i = 0; i < consumers; i++, pos++)
+		handles[pos] = CreateThread(NULL, 0, consume, (int*)consumed[i], 0, &consumersID[i]);
 	WaitForMultipleObjects(consumers + producers, handles, TRUE, INFINITE);
+	cout << "Main finished" << endl;
 };

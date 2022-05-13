@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 #include <ctime>
-using namespace std;
+
 CRITICAL_SECTION cs;
 HANDLE countEvent;
 volatile int res;
@@ -36,9 +36,9 @@ DWORD WINAPI work(LPVOID temp)
 	int* newArray = new int[size];
 	int* tempArray = new int[size];
 	int sleep, j = 0, k = 0;
-	cout << "Input sleep time: ";
-	cin >> sleep;
-	cout << "Worker enter CS" << endl;
+	std::cout << "Input sleep time: ";
+	std::cin >> sleep;
+	std::cout << "Worker enter CS" << std::endl;
 	for (int i = 0; i < size; i++) {
 		if (array[i] == elem) {
 			newArray[j] = elem;
@@ -52,10 +52,10 @@ DWORD WINAPI work(LPVOID temp)
 	for (int i = j, l = 0; l < k; l++, i++)
 		newArray[i] = tempArray[l];
 	for (int i = 0; i < size; i++) {
-		cout << newArray[i] << " ";
+		std::cout << newArray[i] << " ";
 		Sleep(sleep);
 	}
-	cout << endl << "Worker leave CS" << endl;
+	std::cout << std::endl << "Worker leave CS" << std::endl;
 	LeaveCriticalSection(&cs);
 	return 0;
 }
@@ -67,14 +67,14 @@ DWORD WINAPI count(LPVOID temp) {
 	int* array = tmp->getArr();
 	int size = tmp->getSize();
 	EnterCriticalSection(&cs);
-	cout << "Count enter CS" << endl;
+	std::cout << "Count enter CS" << std::endl;
 	for (int i = 0; i < size; i++)
 		if (array[i] == elem)
 			count++;
 	res = count;
-	cout << "Count leave CS" << endl;
+	std::cout << "Count leave CS" << std::endl;
 	LeaveCriticalSection(&cs);
-	cout << "Count set event" << endl;
+	std::cout << "Count set event" << std::endl;
 	SetEvent(countEvent);
 	return 0;
 }
@@ -82,16 +82,16 @@ DWORD WINAPI count(LPVOID temp) {
 int main()
 {
 	int size, tmp;
-	cout << "Input size of array: ";
-	cin >> size;
+	std::cout << "Input size of array: ";
+	std::cin >> size;
 	int* arr = new int[size];
-	cout << "Input " << size << " digits: ";
+	std::cout << "Input " << size << " digits: ";
 	for (int i = 0; i < size; i++)
-		cin >> arr[i];
-	cout << "Array: ";
+		std::cin >> arr[i];
+	std::cout << "Array: ";
 	for (int i = 0; i < size; i++)
-		cout << arr[i] << " ";
-	cout << endl << "Array size: " << size << endl;
+		std::cout << arr[i] << " ";
+	std::cout << std::endl << "Array size: " << size << std::endl;
 	InitializeCriticalSection(&cs);
 	countEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 	arrayS* temp = new arrayS(size, arr);
@@ -99,14 +99,17 @@ int main()
 	DWORD IDworker, IDcounter;
 	worker = CreateThread(NULL, 0, work, (void*)temp, CREATE_SUSPENDED, &IDworker);
 	counter = CreateThread(NULL, 0, count, (void*)temp, CREATE_SUSPENDED, &IDcounter);
-	cout << "Input element: ";
-	cin >> tmp;
+	std::cout << "Input element: ";
+	std::cin >> tmp;
 	elem = tmp;
 	ResumeThread(worker);
-	
 	ResumeThread(counter);
 	WaitForSingleObject(countEvent, INFINITE);
-	cout << res << " elements equals " << elem << " in array" << endl;
-	cout << "End of main";
+	std::cout << res << " elements equals " << elem << " in array" << std::endl;
+	std::cout << "End of main";
+	CloseHandle(worker);
+	CloseHandle(counter);
+	CloseHandle(countEvent);
+	CloseHandle(worker);
 	return 0;
 }

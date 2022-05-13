@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 #include <ctime>
-using namespace std;
 
 struct arrayS {
 private:
@@ -25,33 +24,33 @@ public:
 
 DWORD WINAPI Add(LPVOID temp)
 {
-	cout << endl << "Thread is started";
-	string res = string("");
+	std::cout << std::endl << "Thread is started";
+	std::string res = std::string("");
 	arrayS* tmp = (arrayS*)temp;
 	int* arr = tmp->getArr();
 	int size = tmp->getSize();
 	for (int i = 0; i < size; i++) {
 		if (arr[i] < 0 && arr[i] % 6 == 0) {
-			res += to_string(arr[i]);
+			res += std::to_string(arr[i]);
 			res += '\n';
 		}
 		Sleep(5);
 	}
 	if (!res.compare(""))
-		cout << "No digits" << endl;
+		std::cout << "No digits" << std::endl;
 	else
-		cout << res;
-	cout << "Thread is finished" << endl;
+		std::cout << res;
+	std::cout << "Thread is finished" << std::endl;
 	return 0;
 }
 
 int main()
 {
 	int size, stopTime;
-	cout << "Input size of array: ";
-	cin >> size;
-	cout << "Input time to stop thread: ";
-	cin >> stopTime;
+	std::cout << "Input size of array: ";
+	std::cin >> size;
+	std::cout << "Input time to stop thread: ";
+	std::cin >> stopTime;
 	int* arr = new int[size];
 	srand(time(NULL));
 	for (int i = 0; i < size; i++)
@@ -62,13 +61,13 @@ int main()
 	worker = CreateThread(NULL, 0, Add, (void*)temp, 0, &IDworker);
 	if (worker == NULL)
 		return GetLastError();
-	cout << "Suspend worker" << endl;
+	std::cout << "Suspend worker" << std::endl;
 	SuspendThread(worker);
 	for (int i = 0; i < size; i++)
-		cout << arr[i] << " ";
+		std::cout << arr[i] << " ";
 	Sleep(stopTime);
 	ResumeThread(worker);
-	cout << endl << "Continue worker" << endl;
+	std::cout << std::endl << "Continue worker" << std::endl;
 	WaitForSingleObject(worker, INFINITE);
 	CloseHandle(worker);
 	return 0;

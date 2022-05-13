@@ -2,7 +2,6 @@
 #include <ctime>
 #include <stdlib.h>
 #include <iostream>
-using namespace std;
 
 unsigned int* queue;
 HANDLE SemaphoreAdd;
@@ -49,7 +48,7 @@ DWORD WINAPI consume(LPVOID count) {
 	for (int i = 0; i < cnt; i++) {
 		unsigned int obj = monitor.RemoveHead();
 		EnterCriticalSection(&cs);
-		cout << "Consumed object " << obj << endl;
+		std::cout << "Consumed object " << obj << std::endl;
 		LeaveCriticalSection(&cs);
 		Sleep(500);
 	}
@@ -61,7 +60,7 @@ DWORD WINAPI produce(LPVOID count) {
 	for (int i = 0; i < cnt; i++) { 
 		unsigned int obj = (unsigned int)rand() % 100;
 		EnterCriticalSection(&cs);
-		cout << "Produced object " << obj << endl;
+		std::cout << "Produced object " << obj << std::endl;
 		LeaveCriticalSection(&cs);
 		monitor.AddTail(obj);
 		Sleep(500);
@@ -76,14 +75,14 @@ void main() {
 	HANDLE* handles;
 	DWORD* consumersID;
 	DWORD* producersID;
-	cout << "Input number of consumers: " << endl;
-	cin >> consumers;
+	std::cout << "Input number of consumers: " << std::endl;
+	std::cin >> consumers;
 	consumed = new int[consumers];
-	cout << "Input number of producers: " << endl;
-	cin >> producers;
+	std::cout << "Input number of producers: " << std::endl;
+	std::cin >> producers;
 	produced = new int[producers];
-	cout << "Input size of queue: " << endl;
-	cin >> size;
+	std::cout << "Input size of queue: " << std::endl;
+	std::cin >> size;
 	monitor = MonitorQueue(size);
 	SemaphoreAdd = CreateSemaphore(NULL, size, size, NULL);
 	SemaphoreRemove = CreateSemaphore(NULL, 0, size, NULL);
@@ -93,12 +92,12 @@ void main() {
 	producersID = new DWORD[producers];
 	int pos = 0;
 	for (int i = 0; i < consumers; i++) {
-		cout << "Input number of consumed objects " << endl;
-		cin >> consumed[i];
+		std::cout << "Input number of consumed objects " << std::endl;
+		std::cin >> consumed[i];
 	}
 	for (int i = 0; i < producers; i++) {
-		cout << "Input number of produced objects " << endl;
-		cin >> produced[i];
+		std::cout << "Input number of produced objects " << std::endl;
+		std::cin >> produced[i];
 	}
 	srand(time(0));
 	for (int i = 0; i < producers; i++, pos++)
@@ -106,5 +105,6 @@ void main() {
 	for (int i = 0; i < consumers; i++, pos++)
 		handles[pos] = CreateThread(NULL, 0, consume, (int*)consumed[i], 0, &consumersID[i]);
 	WaitForMultipleObjects(consumers + producers, handles, TRUE, INFINITE);
-	cout << "Main finished" << endl;
+	std::cout << "Main finished" << std::endl;
+	CloseHandle(&handles);
 };

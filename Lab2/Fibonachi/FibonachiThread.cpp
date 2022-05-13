@@ -1,17 +1,16 @@
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
-using namespace std;
 
 int main() {
 	int n1 = 0, n2 = 1, temp;
-	cout << n1 << " f" << endl;
-	cout << n2 << " f" << endl;
+	std::cout << n1 << " f" << std::endl;
+	std::cout << n2 << " f" << std::endl;
 	while (true) {
 		temp = n2;
 		n2 = n1 + n2;
 		n1 = temp;
-		cout << n1 << " f" << endl;
+		std::cout << n1 << " f" << std::endl;
 		Sleep(200);
 	}
 	return 0;

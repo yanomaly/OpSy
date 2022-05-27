@@ -4,7 +4,6 @@
 #include <iostream>
 #include <string>
 #include <ctime>
-using namespace std;
 
 int main(int argc, char* argv[]) {
 	Sleep(100);
@@ -13,17 +12,17 @@ int main(int argc, char* argv[]) {
 	HANDLE semaphore = OpenSemaphore(SEMAPHORE_ALL_ACCESS, TRUE, (LPCWSTR)"såm");
 	char* flag = argv[0];
 	int ms = atoi(argv[1]);
-	string zero = flag;
-	wstring z(zero.begin(), zero.end());
+	std::string zero = flag;
+	std::wstring z(zero.begin(), zero.end());
 	LPWSTR zer = &z[0];
-	string c = "C";
-	wstring cc(c.begin(), c.end());
+	std::string c = "C";
+	std::wstring cc(c.begin(), c.end());
 	LPWSTR ccc = &cc[0];
-	string d = "D";
-	wstring dd(d.begin(), d.end());
+	std::string d = "D";
+	std::wstring dd(d.begin(), d.end());
 	LPWSTR ddd = &dd[0];
-	string mes = "Messages";
-	wstring s(mes.begin(), mes.end());
+	std::string mes = "Messages";
+	std::wstring s(mes.begin(), mes.end());
 	LPWSTR mss = &s[0];
 	HANDLE Finish = OpenEvent(EVENT_ALL_ACCESS, FALSE, zer),
 		C = OpenEvent(EVENT_ALL_ACCESS, FALSE, ccc),
@@ -32,16 +31,16 @@ int main(int argc, char* argv[]) {
 	while(0 != WaitForSingleObject(MESSAGE, 100)) {
 		while (true) {
 			if (0 == WaitForSingleObject(C, 100)) {
-				cout << "CHILD C" << endl;
+				std::cout << "CHILD C" << std::endl;
 				break;
 			}
 			if (0 == WaitForSingleObject(D, 100)) {
-				cout << "CHILD D" << endl;
+				std::cout << "CHILD D" << std::endl;
 				break;
 			}
 		}
 	}
 	SetEvent(Finish);
 	ReleaseSemaphore(semaphore, 1, NULL);
-	cin >> msg;
+	std::cin >> msg;
 }

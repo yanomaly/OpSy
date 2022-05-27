@@ -6,7 +6,7 @@
 unsigned int* queue;
 HANDLE SemaphoreAdd;
 HANDLE SemaphoreRemove;
-CRITICAL_SECTION cs;
+CRITICAL_SECTION cs, cs1, cs2;
 
 class MonitorQueue {
 private:
@@ -18,10 +18,13 @@ public:
 	}
 
 	MonitorQueue(int nSize) {
-		queue = new unsigned int[nSize];
 		maxSize = nSize;
 		currentSize = 0;
 	};
+
+	int getSize() {
+		return this->maxSize;
+	}
 
 	void AddTail(unsigned int& nElement) {
 		WaitForSingleObject(SemaphoreAdd, INFINITE);
@@ -46,10 +49,10 @@ MonitorQueue monitor;
 DWORD WINAPI consume(LPVOID count) {
 	int cnt = (int)count;
 	for (int i = 0; i < cnt; i++) {
+		EnterCriticalSection(&cs1);
 		unsigned int obj = monitor.RemoveHead();
-		EnterCriticalSection(&cs);
 		std::cout << "Consumed object " << obj << std::endl;
-		LeaveCriticalSection(&cs);
+		LeaveCriticalSection(&cs1);
 		Sleep(500);
 	}
 	return 0;
@@ -57,12 +60,14 @@ DWORD WINAPI consume(LPVOID count) {
 
 DWORD WINAPI produce(LPVOID count) {
 	int cnt = (int)count;
+	unsigned int ct = (unsigned int)count;
 	for (int i = 0; i < cnt; i++) { 
 		unsigned int obj = (unsigned int)rand() % 100;
-		EnterCriticalSection(&cs);
+		obj *= ct;
+		EnterCriticalSection(&cs2);
 		std::cout << "Produced object " << obj << std::endl;
-		LeaveCriticalSection(&cs);
 		monitor.AddTail(obj);
+		LeaveCriticalSection(&cs2);
 		Sleep(500);
 	}
 	return 0;
@@ -83,10 +88,13 @@ void main() {
 	produced = new int[producers];
 	std::cout << "Input size of queue: " << std::endl;
 	std::cin >> size;
+	queue = new unsigned int[size];
 	monitor = MonitorQueue(size);
 	SemaphoreAdd = CreateSemaphore(NULL, size, size, NULL);
 	SemaphoreRemove = CreateSemaphore(NULL, 0, size, NULL);
 	InitializeCriticalSection(&cs);
+	InitializeCriticalSection(&cs1);
+	InitializeCriticalSection(&cs2);
 	handles = new HANDLE[consumers + producers];
 	consumersID = new DWORD[consumers];
 	producersID = new DWORD[producers];
@@ -106,5 +114,4 @@ void main() {
 		handles[pos] = CreateThread(NULL, 0, consume, (int*)consumed[i], 0, &consumersID[i]);
 	WaitForMultipleObjects(consumers + producers, handles, TRUE, INFINITE);
 	std::cout << "Main finished" << std::endl;
-	CloseHandle(&handles);
 };

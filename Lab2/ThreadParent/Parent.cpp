@@ -9,10 +9,10 @@ int main(int argc, char* argv[]) {
 	std::cout << "Input (in px) Y: ";
 	std::cin >> Y;
 
-	std::wstring childName(L"C:/Users/famil/source/repos/OpSy/Lab2/x64/Debug/ThreadChild.exe");
+	std::wstring childName(L"D:/Users/famil/source/repos/OpSy/Lab2/x64/Debug/ThreadChild.exe");
 	LPWSTR child = &childName[0];
 
-	std::wstring fibonachiName(L"C:/Users/famil/source/repos/OpSy/Lab2/x64/Debug/Fibonachi.exe");
+	std::wstring fibonachiName(L"D:/Users/famil/source/repos/OpSy/Lab2/x64/Debug/Fibonachi.exe");
 	LPWSTR fibonachi = &fibonachiName[0];
 
 	std::string commandLine = "";

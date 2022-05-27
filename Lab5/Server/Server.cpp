@@ -35,7 +35,7 @@ int main()
 	CreatePipe(&hReadPipe, &hWritePipe, &sa, 0); 
 	ZeroMemory(&si, sizeof(STARTUPINFO));
 	si.cb = sizeof(STARTUPINFO);
-	std::wstring smallName(L"C:/Users/famil/source/repos/OpSy/Lab5/x64/Debug/Small.exe");
+	std::wstring smallName(L"D:/Users/famil/source/repos/OpSy/Lab5/x64/Debug/Small.exe");
 	LPWSTR smll = &smallName[0];
 	std::string lpszComLine = std::to_string((int)hWritePipe) + " " + std::to_string((int)hReadPipe);
 	std::wstring lc(lpszComLine.begin(), lpszComLine.end());

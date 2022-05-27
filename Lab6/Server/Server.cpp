@@ -21,7 +21,7 @@ int main()
 	PROCESS_INFORMATION pi;
 	ZeroMemory(&si, sizeof(STARTUPINFO));
 	si.cb = sizeof(STARTUPINFO);
-	CreateProcess("C:/Users/famil/source/repos/OpSy/Lab6/x64/Debug/Client.exe", NULL, NULL, NULL, TRUE, CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi);
+	CreateProcess("D:/Users/famil/source/repos/OpSy/Lab6/x64/Debug/Client.exe", NULL, NULL, NULL, TRUE, CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi);
 	std::cout << "The server is waiting for connection with a client." << std::endl;
 	if(!ConnectNamedPipe(hNamedPipeWrite, (LPOVERLAPPED)NULL))
 		std::cerr << "The connection failed." << std::endl;

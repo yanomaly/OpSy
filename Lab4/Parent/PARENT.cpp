@@ -2,39 +2,38 @@
 #include <iostream>
 #include <string>
 #include <ctime>
-using namespace std;
 
 int main(int argc, char* argv[]) {
 	int msg, msgs = atoi(argv[1]);
 	char* flag = argv[0];
-	string zero = flag;
-	wstring z(zero.begin(), zero.end());
+	std::string zero = flag;
+	std::wstring z(zero.begin(), zero.end());
 	LPWSTR zer = &z[0];
-	string a = "A";
-	wstring aa(a.begin(), a.end());
+	std::string a = "A";
+	std::wstring aa(a.begin(), a.end());
 	LPWSTR aaa = &aa[0];
-	string b = "B";
-	wstring bb(b.begin(), b.end());
+	std::string b = "B";
+	std::wstring bb(b.begin(), b.end());
 	LPWSTR bbb = &bb[0];
 	HANDLE Finish = OpenEvent(EVENT_ALL_ACCESS, FALSE, zer),
 		A = OpenEvent(EVENT_ALL_ACCESS, FALSE, aaa),
 		B = OpenEvent(EVENT_ALL_ACCESS, FALSE, bbb);
 	char *ms = new char[msgs];
 	for (int i = 0; i < msgs; i++) {
-		cout << "Input \"A\" or \"B\": ";
-		cin >> ms[i];
+		std::cout << "Input \"A\" or \"B\": ";
+		std::cin >> ms[i];
 	}
 	for (int i = 0; i < msgs; i++) {
 		if (ms[i] == 'A') {
-			cout << "A from parent" << endl;
+			std::cout << "A from parent" << std::endl;
 			SetEvent(A);
 		}
 		if (ms[i] == 'B') {
-			cout << "B from parent" << endl;
+			std::cout << "B from parent" << std::endl;
 			SetEvent(B);
 		}
 		Sleep(1000);
 	}
 	SetEvent(Finish);
-	cin >> msg;
+	std::cin >> msg;
 }

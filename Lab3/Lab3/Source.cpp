@@ -107,9 +107,7 @@ int main()
 	WaitForSingleObject(countEvent, INFINITE);
 	std::cout << res << " elements equals " << elem << " in array" << std::endl;
 	std::cout << "End of main";
-	CloseHandle(worker);
 	CloseHandle(counter);
-	CloseHandle(countEvent);
 	CloseHandle(worker);
 	return 0;
 }

@@ -59,4 +59,7 @@ void main(){
     for (int i = 0; i < count; i++)
         phylosophers[i] = CreateThread(NULL, 0, eat, (Phylosopher*)new Phylosopher(std::to_string(i), true), 0, &phylosophersID[i]);
     WaitForMultipleObjects(count, phylosophers, TRUE, INFINITE);
+    CloseHandle(table);
+    delete[] phylosophers;
+    delete[] phylosophersID;
 }

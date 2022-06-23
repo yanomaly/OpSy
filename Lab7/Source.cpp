@@ -60,10 +60,9 @@ DWORD WINAPI consume(LPVOID count) {
 
 DWORD WINAPI produce(LPVOID count) {
 	int cnt = (int)count;
-	unsigned int ct = (unsigned int)count;
 	for (int i = 0; i < cnt; i++) { 
 		unsigned int obj = (unsigned int)rand() % 100;
-		obj *= ct;
+		obj *= (unsigned int)count;
 		EnterCriticalSection(&cs2);
 		std::cout << "Produced object " << obj << std::endl;
 		monitor.AddTail(obj);
@@ -114,4 +113,11 @@ void main() {
 		handles[pos] = CreateThread(NULL, 0, consume, (int*)consumed[i], 0, &consumersID[i]);
 	WaitForMultipleObjects(consumers + producers, handles, TRUE, INFINITE);
 	std::cout << "Main finished" << std::endl;
+	delete[] consumed;
+	delete[] produced;
+	delete[] handles;
+	delete[] consumersID;
+	delete[] producersID;
+	CloseHandle(SemaphoreAdd);
+	CloseHandle(SemaphoreRemove);
 };

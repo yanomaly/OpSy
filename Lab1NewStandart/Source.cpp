@@ -62,5 +62,6 @@ int main()
 	t1.join();
 	for (int i = 0; i < size; i++)
 		std::cout << arr[i] << " ";
+	delete[] arr;
 	return 0;
 }

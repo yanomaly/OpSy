@@ -57,6 +57,8 @@ DWORD WINAPI work(LPVOID temp)
 	}
 	std::cout << std::endl << "Worker leave CS" << std::endl;
 	LeaveCriticalSection(&cs);
+	delete[] newArray;
+	delete[] tempArray;
 	return 0;
 }
 
@@ -109,5 +111,6 @@ int main()
 	std::cout << "End of main";
 	CloseHandle(counter);
 	CloseHandle(worker);
+	delete[] arr;
 	return 0;
 }

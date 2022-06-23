@@ -23,5 +23,8 @@ int main(int argc, char* argv[]) {
 	for (int i = 0; i < size; i++)
 		std::cout << newArray[i] << " ";
 	Sleep(5000);
+	delete[] array;
+	delete[] newArray;
+	delete[] tempArray;
 	return 0;
 }

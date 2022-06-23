@@ -69,6 +69,7 @@ int main()
 	ResumeThread(worker);
 	std::cout << std::endl << "Continue worker" << std::endl;
 	WaitForSingleObject(worker, INFINITE);
+	delete[] arr;
 	CloseHandle(worker);
 	return 0;
 }

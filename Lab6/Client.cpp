@@ -6,7 +6,6 @@ int main()
 	HANDLE hNamedPipeR, hNamedPipeW;
 
 	hNamedPipeR = CreateFile("\\\\.\\pipe\\demo_pipe2", GENERIC_READ, FILE_SHARE_READ, (LPSECURITY_ATTRIBUTES)NULL, OPEN_EXISTING, 0, (HANDLE)NULL);
-	std::cout << hNamedPipeR << std::endl;
 	int size, elem, new_size = 0;
 	DWORD dwBytesRead1;
 	ReadFile(hNamedPipeR, &size, sizeof(size), &dwBytesRead1, NULL);
@@ -38,8 +37,8 @@ int main()
 		WriteFile(hNamedPipeW, &array[i], sizeof(array[i]), &dwBytesWritten1, NULL);
 		std::cout << "Writing into pipe... " << array[i] << std::endl;
 	}
-	std::cin >> new_size;
 	CloseHandle(hNamedPipeR);
 	CloseHandle(hNamedPipeW);
+	delete[] array;
 	return 0;
 }

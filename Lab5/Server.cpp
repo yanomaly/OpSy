@@ -17,30 +17,21 @@ int main()
 	std::cin >> elem;
 
 	HANDLE hEnableRead, hEnableRead1;
-	std::string lpszEnableRead = "EnableRead";
-	std::wstring ler(lpszEnableRead.begin(), lpszEnableRead.end());
-	LPWSTR lpszer = &ler[0];
-	std::string lpszEnableRead1 = "EnableRead1";
-	std::wstring ler1(lpszEnableRead1.begin(), lpszEnableRead1.end());
-	LPWSTR lpszer1 = &ler1[0];
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
 	HANDLE hWritePipe, hReadPipe;
 	SECURITY_ATTRIBUTES sa;
-	hEnableRead = CreateEvent(NULL, FALSE, FALSE, lpszer);
-	hEnableRead1 = CreateEvent(NULL, FALSE, FALSE, lpszer1);
+	hEnableRead = CreateEvent(NULL, FALSE, FALSE, "EnableRead");
+	hEnableRead1 = CreateEvent(NULL, FALSE, FALSE, "EnableRead1");
 	sa.nLength = sizeof(SECURITY_ATTRIBUTES);
 	sa.lpSecurityDescriptor = NULL;
 	sa.bInheritHandle = TRUE;
 	CreatePipe(&hReadPipe, &hWritePipe, &sa, 0); 
+
 	ZeroMemory(&si, sizeof(STARTUPINFO));
 	si.cb = sizeof(STARTUPINFO);
-	std::wstring smallName(L"D:/Users/famil/source/repos/OpSy/Lab5/x64/Debug/Small.exe");
-	LPWSTR smll = &smallName[0];
-	std::string lpszComLine = std::to_string((int)hWritePipe) + " " + std::to_string((int)hReadPipe);
-	std::wstring lc(lpszComLine.begin(), lpszComLine.end());
-	LPWSTR comline = &lc[0];
-	CreateProcess(smll, comline, NULL, NULL, TRUE, CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi);
+	std::string commandLine = std::to_string((int)hWritePipe) + " " + std::to_string((int)hReadPipe);
+	CreateProcess("D:/Users/famil/source/repos/OpSy/Lab5/x64/Debug/Small.exe", const_cast<char*>(commandLine.c_str()), NULL, NULL, TRUE, CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi);
 	DWORD dwBytesWritten1;
 	WriteFile(hWritePipe, &size, sizeof(size), &dwBytesWritten1, NULL);
 	std::cout << "Writing into pipe... " << size << std::endl;
@@ -74,5 +65,6 @@ int main()
 	CloseHandle(hWritePipe);
 	CloseHandle(hEnableRead);
 	CloseHandle(hEnableRead1);
+	delete[] array;
 	return 0;
 }

@@ -60,5 +60,6 @@ int main()
 	std::cout << "Result " << result;
 	CloseHandle(hNamedPipeRead);
 	CloseHandle(hNamedPipeWrite);
+	delete[] array;
 	return 0;
 }

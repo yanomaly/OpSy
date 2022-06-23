@@ -7,14 +7,8 @@ int main(int argc, char* argv[])
 {
 	HANDLE hWritePipe, hReadPipe;
 	HANDLE hEnableRead, hEnableRead1; 
-	std::string lpszEnableRead = "EnableRead";
-	std::wstring ler(lpszEnableRead.begin(), lpszEnableRead.end());
-	LPWSTR lpszer = &ler[0];
-	std::string lpszEnableRead1 = "EnableRead1";
-	std::wstring ler1(lpszEnableRead1.begin(), lpszEnableRead1.end());
-	LPWSTR lpszer1 = &ler1[0];
-	hEnableRead = OpenEvent(EVENT_ALL_ACCESS, FALSE, lpszer);
-	hEnableRead1 = OpenEvent(EVENT_ALL_ACCESS, FALSE, lpszer1);
+	hEnableRead = OpenEvent(EVENT_ALL_ACCESS, FALSE, "EnableRead");
+	hEnableRead1 = OpenEvent(EVENT_ALL_ACCESS, FALSE, "EnableRead1");
 	hWritePipe = (HANDLE)atoi(argv[0]);
 	hReadPipe = (HANDLE)atoi(argv[1]);
 	std::cout << "Waiting to start reading" << std::endl;
@@ -50,11 +44,10 @@ int main(int argc, char* argv[])
 		result += std::to_string(array[i]) + " ";
 	}
 	SetEvent(hEnableRead1);
-	std::cout << "Result: " << result;
-	std::cin >> new_size;
 	CloseHandle(hWritePipe);
 	CloseHandle(hReadPipe);
 	CloseHandle(hEnableRead);
 	CloseHandle(hEnableRead1);
+	delete[] array;
 	return 0;
 }
